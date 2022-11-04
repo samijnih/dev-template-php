@@ -1,0 +1,55 @@
+version: '3.9'
+
+services:
+  php:
+    container_name: php
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - $PWD:/app
+    networks:
+      - 'dev'
+
+  postgres:
+    container_name: postgres
+    image: postgres:alpine
+    environment:
+      POSTGRES_DB: $POSTGRES_DB
+      POSTGRES_USER: $POSTGRES_USER
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    volumes:
+      - '$PWD/infra/postgres/:/docker-entrypoint-initdb.d/'
+    ports:
+      - '5432:5432'
+    expose:
+      - '5432'
+    networks:
+      - 'dev'
+
+  aws:
+    container_name: aws
+    image: localstack/localstack:latest
+    environment:
+      SERVICES: sns,sqs
+      EDGE_BIND_HOST: 0.0.0.0
+      EAGER_SERVICE_LOADING: 1
+      AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+      AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+      USE_LIGHT_IMAGE: 1
+      EDGE_PORT: 4566
+      USE_SSL: false
+      DOCKER_SOCK: unix:///var/run/docker.sock
+    volumes:
+      - '$PWD/infra/localstack/:/docker-entrypoint-initaws.d/'
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    ports:
+      - '4566:4566'
+      - '4510-4559:4510-4559'
+    networks:
+      - 'dev'
+
+networks:
+  dev:
+    external: true
