@@ -1,0 +1,52 @@
+{
+  "type": "object",
+  "required": [
+    "id",
+    "metadata",
+    "payload"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "metadata": {
+      "type": "object",
+      "required": [
+        "type",
+        "status",
+        "created_at",
+        "updated_at",
+        "finished_at"
+      ],
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "processing",
+            "succeeded",
+            "failed"
+          ]
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "finished_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "payload": {
+      "type": "object"
+    }
+  }
+}

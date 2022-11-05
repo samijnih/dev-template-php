@@ -1,0 +1,18 @@
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                                      https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd"
+>
+    <entity name="Domain\Order\Model\Order\Product" schema="public" table="order_product">
+        <id name="id" type="guid">
+            <generator strategy="NONE"/>
+        </id>
+
+        <field name="sku" type="string" nullable="false"/>
+        <field name="quantity" type="integer" nullable="false"/>
+        <field name="amount" type="string" nullable="false"/>
+        <field name="currency" type="string" nullable="false"/>
+
+        <many-to-one field="order" target-entity="Domain\Order\Model\Order\Order" inversed-by="products" />
+    </entity>
+</doctrine-mapping>

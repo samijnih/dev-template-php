@@ -37,9 +37,25 @@ php: ## Enter php cli.
 > @$(DC) exec php sh
 .PHONY: php
 
+cs-fixer: ## Run php-cs-fixer.
+> @$(DC) exec php tools/vendor/bin/php-cs-fixer fix --allow-risky=yes --using-cache=no
+.PHONY: cs-fixer
+
+setup-messenger: ## Setup messenger queues.
+> @$(DC) exec php bin/console messenge:setup-transports
+.PHONY: setup-messenger
+
 aws: ## Enter AWS cli.
 > @$(DC) exec aws bash
 .PHONY: aws
+
+aws-sns-list:
+> @$(DC) exec aws awslocal sns list-topics
+.PHONY: aws-sns-list
+
+aws-sqs-list:
+> @$(DC) exec aws awslocal sqs list-queues
+.PHONY: aws-sqs-list
 
 postgres: ## Enter PSQL.
 > @$(DC) exec -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD postgres psql -U $(POSTGRES_USER) -d $(POSTGRES_DB)

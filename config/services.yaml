@@ -4,3 +4,25 @@ services:
     _defaults:
         autowire: true
         autoconfigure: true
+
+    Swaggest\JsonSchema\Schema: ~
+    Ramsey\Uuid\UuidFactory: ~
+    Ramsey\Uuid\UuidFactoryInterface: '@Ramsey\Uuid\UuidFactory'
+
+    Infrastructure\CLI\PlaceOrderCommand:
+        tags: [ 'console.command' ]
+
+    Infrastructure\API\Bus\Messenger\MessengerCommandBus: ~
+    Infrastructure\SPI\ValidateJsonSchemaUsingSwaggest: ~
+    Infrastructure\SPI\Write\Repository\DbalSagaRepository: ~
+    Infrastructure\SPI\Bus\Messenger\MessengerEventBus: ~
+
+    Domain\API\CommandBus: '@Infrastructure\API\Bus\Messenger\MessengerCommandBus'
+    Domain\Model\Saga\SagaRepository: '@Infrastructure\SPI\Write\Repository\DbalSagaRepository'
+    Domain\SPI\ValidateJsonSchema: '@Infrastructure\SPI\ValidateJsonSchemaUsingSwaggest'
+    Domain\SPI\Clock\ClockSerializer: ~
+    Domain\SPI\Saga\SagaSerializer: ~
+    Domain\SPI\EventBus: '@Infrastructure\SPI\Bus\Messenger\MessengerEventBus'
+
+    Domain\Order\Saga\PlaceOrderSaga: ~
+    Domain\Payment\Features\CaptureOrder\HandleCaptureOrderPayment: ~

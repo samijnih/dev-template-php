@@ -1,15 +1,26 @@
 monolog:
     channels:
         - deprecation
+        - messenger
 
 when@dev:
     monolog:
         handlers:
             main:
                 type: stream
-                path: php://stderr
+                path: php://stdout
                 level: debug
-                channels: ["!event"]
+                channels: ["!event", "!deprecation", "!doctrine", "!messenger"]
+#            doctrine:
+#                type: stream
+#                path: php://stdout
+#                level: info
+#                channels: [ "doctrine" ]
+            messenger:
+                type: stream
+                path: php://stdout
+                level: info
+                channels: [ "messenger" ]
             console:
                 type: console
                 process_psr_3_messages: false
@@ -26,7 +37,7 @@ when@test:
                 channels: ["!event", "!deprecation"]
             nested:
                 type: stream
-                path: php://stderr
+                path: php://stdout
                 level: debug
 
 when@prod:
@@ -40,7 +51,7 @@ when@prod:
                 buffer_size: 50
             nested:
                 type: stream
-                path: php://stderr
+                path: php://stdout
                 level: debug
                 formatter: monolog.formatter.json
             console:
@@ -50,4 +61,4 @@ when@prod:
             deprecation:
                 type: stream
                 channels: [deprecation]
-                path: php://stderr
+                path: php://stdout

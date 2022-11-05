@@ -10,8 +10,7 @@ doctrine:
             Domain:
                 is_bundle: false
                 dir: '%kernel.project_dir%/config/doctrine'
-                prefix: 'Domain\Model'
-                alias: WriteModel
+                prefix: 'Domain'
                 type: xml
 
 when@test:

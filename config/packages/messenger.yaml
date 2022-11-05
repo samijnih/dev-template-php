@@ -1,0 +1,59 @@
+framework:
+    messenger:
+        default_bus: command.bus
+
+        transports:
+             place_order:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    queue_name: place-order
+                    auto_setup: true
+                    visibility_timeout: 2
+                    poll_timeout: 0.1
+                    wait_time: 20
+
+             place_order_events:
+                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                 options:
+                     queue_name: place-order-events
+                     auto_setup: true
+                     visibility_timeout: 2
+                     poll_timeout: 0.1
+                     wait_time: 20
+
+             capture_payment:
+                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                 options:
+                     queue_name: capture-payment
+                     auto_setup: true
+                     visibility_timeout: 2
+                     poll_timeout: 0.1
+                     wait_time: 20
+
+        routing:
+            'Domain\Order\Features\Place\PlaceOrder': place_order
+            'Domain\Payment\Features\CaptureOrder\CaptureOrderPayment': capture_payment
+
+            'Domain\Order\Model\Order\Event\OrderPlaced': place_order_events
+            'Domain\Payment\Model\Payment\Event\OrderPaymentCaptured': place_order_events
+
+        buses:
+            command.bus:
+                middleware:
+                    - doctrine_ping_connection
+                    - doctrine_close_connection
+                    - doctrine_transaction
+
+            event.bus:
+                middleware:
+                    - doctrine_ping_connection
+                    - doctrine_close_connection
+                    - doctrine_transaction
+
+# when@test:
+#    framework:
+#        messenger:
+#            transports:
+#                # replace with your transport name here (e.g., my_transport: 'in-memory://')
+#                # For more Messenger testing tools, see https://github.com/zenstruck/messenger-test
+#                async: 'in-memory://'
